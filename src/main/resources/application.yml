@@ -1,1 +1,35 @@
-spring.application.name=getdon-api
+spring:
+  application:
+    name: getdon-api
+
+  profiles:
+    active: dev
+    config:
+      import: optional:file:.env[.properties]
+
+    datasource:
+      url: ${DB_URL}
+      username: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
+      driver-class-name: org.postgresql.Driver
+      hikari:
+        maximum-pool-size: 10
+        connection-timeout: 3000
+    jpa:
+      hibernate:
+        ddl-auto: update
+      open-in-view: false
+      properties:
+        hibernate:
+          show_sql: true
+          format_sql: true
+          default_batch_fetch_size: 100
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+          jdbc:
+            exception-handling: ignore
+
+  jwt:
+    secret-key: ${JWT_SECRET_KEY}
+
+  logging:
+    config: classpath:logback/logback-config.xml
