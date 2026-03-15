@@ -1,7 +1,8 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '4.0.3'
+    id 'org.springframework.boot' version '3.4.3'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'com.epages.restdocs-api-spec' version '0.19.4'
 }
 
 group = 'com.api.app'
@@ -31,11 +32,13 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
-    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.19.4'
     runtimeOnly 'org.postgresql:postgresql'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
@@ -62,4 +65,19 @@ tasks.withType(JavaCompile).configureEach {
 
 clean.doLast {
     file(querydslDir).deleteDir()
+}
+
+openapi3 {
+    servers = [{ url = 'http://localhost:8080' }]
+    title = 'getdon-api'
+    version = '0.0.1-SNAPSHOT'
+    outputFileNamePrefix = 'openapi3'
+    outputDirectory = 'src/main/resources/static/docs'
+    format = 'yaml'
+}
+
+afterEvaluate {
+    tasks.named('openapi3') {
+        dependsOn tasks.named('test')
+    }
 }

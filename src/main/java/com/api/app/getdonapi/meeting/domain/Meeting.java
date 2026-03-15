@@ -36,6 +36,7 @@ public class Meeting extends BaseTimeEntity {
     private Integer bankAccount;
 
     @Column(name = "amount", nullable = false)
+
     private Integer amount = 0;
 
     @Column(name = "delete_yn", nullable = false, length = 1)

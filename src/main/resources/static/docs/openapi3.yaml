@@ -1,0 +1,140 @@
+openapi: 3.0.1
+info:
+  title: getdon-api
+  version: 0.0.1-SNAPSHOT
+servers:
+- url: http://localhost:8080
+tags: []
+paths:
+  /api/member/join:
+    post:
+      tags:
+      - Member
+      summary: 회원가입
+      description: 이메일과 비밀번호로 회원가입합니다.
+      operationId: member-
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserSaveRequest"
+            examples:
+              member-create:
+                value: "{\"userName\":\"테스터\",\"email\":\"test@test.com\",\"password\"\
+                  :\"password123!\"}"
+              member-join:
+                value: "{\"userName\":\"테스터\",\"email\":\"test@test.com\",\"password\"\
+                  :\"password123!\"}"
+      responses:
+        "201":
+          description: "201"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+              examples:
+                member-create:
+                  value: "{\"message\":\"회원가입이 정상적으로 완료됐습니다.\",\"data\":null,\"status\"\
+                    :201}"
+                member-join:
+                  value: "{\"message\":\"회원가입이 정상적으로 완료됐습니다.\",\"data\":null,\"status\"\
+                    :201}"
+  /api/member/login:
+    post:
+      tags:
+      - Member
+      summary: 로그인
+      description: 이메일과 비밀번호로 로그인합니다.
+      operationId: member-login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserLoginRequest"
+            examples:
+              member-login:
+                value: "{\"email\":\"test@test.com\",\"password\":\"password123!\"\
+                  }"
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserLoginResponse"
+              examples:
+                member-login:
+                  value: "{\"message\":\"로그인이 정상적으로 완료됐습니다.\",\"data\":{\"accessToken\"\
+                    :\"access-token-value\",\"refreshToken\":\"refresh-token-value\"\
+                    },\"status\":200}"
+components:
+  schemas:
+    UserLoginResponse:
+      title: UserLoginResponse
+      required:
+      - message
+      - status
+      type: object
+      properties:
+        data:
+          required:
+          - accessToken
+          - refreshToken
+          type: object
+          properties:
+            accessToken:
+              type: string
+              description: 액세스 토큰
+            refreshToken:
+              type: string
+              description: 리프레시 토큰
+        message:
+          type: string
+          description: 응답 메시지
+        status:
+          type: number
+          description: HTTP 상태 코드
+    UserSaveRequest:
+      title: UserSaveRequest
+      required:
+      - email
+      - password
+      - userName
+      type: object
+      properties:
+        password:
+          type: string
+          description: 비밀번호
+        userName:
+          type: string
+          description: 사용자 이름
+        email:
+          type: string
+          description: 이메일
+    ApiResponse:
+      title: ApiResponse
+      required:
+      - data
+      - message
+      - status
+      type: object
+      properties:
+        message:
+          type: string
+          description: 응답 메시지
+        status:
+          type: number
+          description: HTTP 상태 코드
+    UserLoginRequest:
+      title: UserLoginRequest
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        password:
+          type: string
+          description: 비밀번호
+        email:
+          type: string
+          description: 이메일
