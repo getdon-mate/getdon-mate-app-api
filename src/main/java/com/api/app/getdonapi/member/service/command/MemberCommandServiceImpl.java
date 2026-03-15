@@ -35,7 +35,6 @@ public class MemberCommandServiceImpl implements MemberCommandService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .provider(LOGINTYPE.NORMAL)
-                .useYn(UseYn.Y)
                 .build();
 
         userRepository.save(user);

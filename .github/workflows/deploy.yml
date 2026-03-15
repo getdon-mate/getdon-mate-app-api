@@ -27,6 +27,11 @@ jobs:
       - name: Build jar
         run: ./gradlew build -x test
 
+      - name: Debug tag
+        run: |
+          echo "length: $(echo -n '${{ secrets.DOCKER_USERNAME }}' | wc -c)"
+          echo "hex: $(echo -n '${{ secrets.DOCKER_USERNAME }}' | xxd | head -1)"
+
       - name: Docker build & push
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
