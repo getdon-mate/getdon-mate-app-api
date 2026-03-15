@@ -4,7 +4,7 @@ import com.api.app.getdonapi.global.BaseTimeEntity;
 import com.api.app.getdonapi.global.enums.UseYn;
 import com.api.app.getdonapi.meeting.domain.Meeting;
 import com.api.app.getdonapi.meetingmember.domain.MeetingMember;
-import com.api.app.getdonapi.member.domain.enums.LOGINTYPE;
+import com.api.app.getdonapi.member.domain.enums.LoginType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,7 +33,7 @@ public class User extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 6)
-    private LOGINTYPE provider;
+    private LoginType provider;
 
     @Column(name = "provider_id")
     private String providerId;
@@ -50,7 +50,7 @@ public class User extends BaseTimeEntity {
 
     @Builder
     public User(String userName, String profileUrl, String email, String password,
-                LOGINTYPE provider, String providerId) {
+                LoginType provider, String providerId) {
         this.userName = userName;
         this.profileUrl = profileUrl;
         this.email = email;
