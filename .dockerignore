@@ -1,0 +1,11 @@
+.gradle
+.idea
+.github
+.env
+build/classes
+build/generated
+build/tmp
+src
+*.iml
+*.md
+gradlew.bat
