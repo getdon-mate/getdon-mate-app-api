@@ -29,10 +29,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = resolveToken(request);
 
         if (token != null && tokenProvider.validateToken(token)) {
-            String email = tokenProvider.getEmail(token);
-            String role  = tokenProvider.getRole(token);
+            Long userId = tokenProvider.getUserId(token);
+            String email  = tokenProvider.getEmail(token);
+            String role   = tokenProvider.getRole(token);
 
-            UserPrincipal principal = new UserPrincipal(email, role);
+            UserPrincipal principal = new UserPrincipal(userId, email, role);
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     principal, null, List.of(new SimpleGrantedAuthority("ROLE_" + role))
             );

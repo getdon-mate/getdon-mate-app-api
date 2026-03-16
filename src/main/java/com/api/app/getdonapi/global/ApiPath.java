@@ -12,5 +12,6 @@ public class ApiPath {
     public static final class Meeting {
         public static final String ROOT  = API + "/meeting";
         public static final String MY_LIST = "/my-list";
+        public static final String CREATE  = "/create";
     }
 }

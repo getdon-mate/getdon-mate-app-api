@@ -13,6 +13,8 @@ public enum ApiResponseCode {
 
     MEMBER_CREATED(HttpStatus.CREATED, "회원가입이 정상적으로 완료됐습니다."),
     MEMBER_LOGIN(HttpStatus.OK, "로그인이 정상적으로 완료됐습니다."),
+
+    MEETING_CREATED(HttpStatus.CREATED, "모임 통장 개설 완료되었습니다."),
     ;
 
     private final HttpStatus httpStatus;

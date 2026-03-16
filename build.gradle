@@ -80,5 +80,25 @@ openapi3 {
 afterEvaluate {
     tasks.named('openapi3') {
         dependsOn tasks.named('test')
+        doLast {
+            def yamlFile = file('src/main/resources/static/docs/openapi3.yaml')
+            def content = yamlFile.getText('UTF-8')
+
+            // Inject security requirement for non-public endpoints (skip member-*)
+            content = content.replaceAll(
+                /(?m)(^      operationId: (?!member-)(.+)$)/,
+                '$1\n      security:\n      - bearerAuth: []'
+            )
+
+            // Inject securitySchemes block into components
+            if (!content.contains('securitySchemes:')) {
+                content = content.replace(
+                    '  schemas:',
+                    '  securitySchemes:\n    bearerAuth:\n      type: http\n      scheme: bearer\n      bearerFormat: JWT\n  schemas:'
+                )
+            }
+
+            yamlFile.setText(content, 'UTF-8')
+        }
     }
 }
