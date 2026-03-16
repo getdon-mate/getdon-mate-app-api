@@ -20,12 +20,12 @@ public class TokenProvider {
     @Value("${jwt.secret-key}")
     private String secretKey;
 
-    public String generateAccessToken(String email, String role) {
-        return buildToken(email, role, ACCESS_TOKEN_EXPIRY);
+    public String generateAccessToken(Long userId, String email, String role) {
+        return buildToken(userId, email, role, ACCESS_TOKEN_EXPIRY);
     }
 
-    public String generateRefreshToken(String email, String role) {
-        return buildToken(email, role, REFRESH_TOKEN_EXPIRY);
+    public String generateRefreshToken(Long userId, String email, String role) {
+        return buildToken(userId, email, role, REFRESH_TOKEN_EXPIRY);
     }
 
     public boolean validateToken(String token) {
@@ -45,10 +45,15 @@ public class TokenProvider {
         return getClaims(token).get("role", String.class);
     }
 
-    private String buildToken(String email, String role, long expiry) {
+    public Long getUserId(String token) {
+        return getClaims(token).get("userId", Long.class);
+    }
+
+    private String buildToken(Long userId, String email, String role, long expiry) {
         Date now = new Date();
         return Jwts.builder()
                 .subject(email)
+                .claim("userId", userId)
                 .claim("role", role)
                 .issuedAt(now)
                 .expiration(new Date(now.getTime() + expiry))

@@ -1,6 +1,6 @@
 package com.api.app.getdonapi.member.domain.enums;
 
-public enum LOGINTYPE {
+public enum LoginType {
     NORMAL,
     GOOGLE,
     KAKAO

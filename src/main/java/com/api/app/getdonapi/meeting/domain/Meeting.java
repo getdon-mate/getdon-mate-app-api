@@ -1,6 +1,7 @@
 package com.api.app.getdonapi.meeting.domain;
 
 import com.api.app.getdonapi.global.BaseTimeEntity;
+import com.api.app.getdonapi.meeting.domain.enums.DeleteYn;
 import com.api.app.getdonapi.meetingmember.domain.MeetingMember;
 import com.api.app.getdonapi.member.domain.User;
 import com.api.app.getdonapi.onetimepayment.domain.OneTimePayment;
@@ -38,8 +39,9 @@ public class Meeting extends BaseTimeEntity {
 
     private Integer amount = 0;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "delete_yn", nullable = false, length = 1)
-    private String deleteYn = "N";
+    private DeleteYn deleteYn = DeleteYn.N;
 
     @OneToMany(mappedBy = "meeting")
     private List<MeetingMember> meetingMembers = new ArrayList<>();
@@ -54,11 +56,11 @@ public class Meeting extends BaseTimeEntity {
         this.bankName = bankName;
         this.bankAccount = bankAccount;
         this.amount = 0;
-        this.deleteYn = "N";
+        this.deleteYn = DeleteYn.N;
     }
 
     public void delete() {
-        this.deleteYn = "Y";
+        this.deleteYn = DeleteYn.Y;
     }
 
     public void updateAmount(int amount) {

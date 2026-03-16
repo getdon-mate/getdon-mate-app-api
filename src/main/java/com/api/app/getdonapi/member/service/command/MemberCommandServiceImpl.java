@@ -2,13 +2,12 @@ package com.api.app.getdonapi.member.service.command;
 
 import com.api.app.getdonapi.global.config.jwt.TokenProvider;
 import com.api.app.getdonapi.global.enums.ErrorCode;
-import com.api.app.getdonapi.global.enums.UseYn;
 import com.api.app.getdonapi.global.exception.CustomException;
 import com.api.app.getdonapi.member.controller.request.UserLoginRequest;
 import com.api.app.getdonapi.member.controller.request.UserJoinRequest;
 import com.api.app.getdonapi.member.controller.response.UserLoginResponse;
 import com.api.app.getdonapi.member.domain.User;
-import com.api.app.getdonapi.member.domain.enums.LOGINTYPE;
+import com.api.app.getdonapi.member.domain.enums.LoginType;
 import com.api.app.getdonapi.member.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,7 +33,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
                 .userName(request.getUserName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .provider(LOGINTYPE.NORMAL)
+                .provider(LoginType.NORMAL)
                 .build();
 
         userRepository.save(user);
@@ -49,8 +48,8 @@ public class MemberCommandServiceImpl implements MemberCommandService {
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
 
-        String accessToken  = tokenProvider.generateAccessToken(user.getEmail(), user.getProvider().name());
-        String refreshToken = tokenProvider.generateRefreshToken(user.getEmail(), user.getProvider().name());
+        String accessToken  = tokenProvider.generateAccessToken(user.getId(), user.getEmail(), user.getProvider().name());
+        String refreshToken = tokenProvider.generateRefreshToken(user.getId(), user.getEmail(), user.getProvider().name());
 
         return UserLoginResponse.builder()
                 .accessToken(accessToken)
