@@ -16,4 +16,8 @@ public class ApiPath {
         public static final String INVITE_CODE = "/invite-code";
     }
 
+    public static final class MeetingMember {
+        public static final String ROOT  = API + "/meeting-member";
+        public static final String JOIN = "/join";
+    }
 }

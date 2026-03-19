@@ -7,6 +7,34 @@ servers:
 - url: http://localhost:8080
 tags: []
 paths:
+  /api/meeting-member/join:
+    post:
+      tags:
+      - MeetingMember
+      summary: 모임 참여
+      description: 초대코드로 모임에 참여합니다.
+      operationId: meeting-member-join
+      security:
+      - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JoinMeetingRequest"
+            examples:
+              meeting-member-join:
+                value: "{\"inviteCode\":\"ABCD1234\"}"
+      responses:
+        "201":
+          description: "201"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+              examples:
+                meeting-member-join:
+                  value: "{\"message\":\"모임 통장에 초대되었습니다.\",\"data\":null,\"status\"\
+                    :201}"
   /api/meeting/create:
     post:
       tags:
@@ -293,3 +321,12 @@ components:
         status:
           type: number
           description: HTTP 상태 코드
+    JoinMeetingRequest:
+      title: JoinMeetingRequest
+      required:
+      - inviteCode
+      type: object
+      properties:
+        inviteCode:
+          type: string
+          description: 모임 초대코드 (8자리)
