@@ -1,5 +1,7 @@
 package com.api.app.getdonapi.meeting.service.query;
 
+import com.api.app.getdonapi.global.enums.ErrorCode;
+import com.api.app.getdonapi.global.exception.CustomException;
 import com.api.app.getdonapi.meeting.controller.response.MyMeetingListResponse;
 import com.api.app.getdonapi.meeting.repository.MeetingRepository;
 import com.api.app.getdonapi.meeting.service.internal.MyMeetingList;
@@ -21,6 +23,13 @@ public class MeetingQueryServiceImpl implements MeetingQueryService {
         return meetingRepository.findMyMeetingList(userId).stream()
                 .map(this::toResponse)
                 .toList();
+    }
+
+    @Override
+    public String getInviteCode(Long meetingId) {
+        return meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEETING_NOT_FOUND))
+                .getInviteCode();
     }
 
     private MyMeetingListResponse toResponse(MyMeetingList item) {

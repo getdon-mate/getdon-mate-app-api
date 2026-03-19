@@ -13,6 +13,7 @@ public class ApiPath {
         public static final String ROOT  = API + "/meeting";
         public static final String MY_LIST = "/my-list";
         public static final String CREATE  = "/create";
+        public static final String INVITE_CODE = "/invite-code";
     }
 
 }

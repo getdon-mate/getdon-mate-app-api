@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -23,5 +24,10 @@ public class MeetingQueryController {
     @GetMapping(ApiPath.Meeting.MY_LIST)
     public ApiResponse<List<MyMeetingListResponse>> myList(@AuthenticationPrincipal UserPrincipal user) {
         return ApiResponse.of(ApiResponseCode.SUCCESS, meetingQueryService.getMyList(user.userId()));
+    }
+
+    @GetMapping(ApiPath.Meeting.INVITE_CODE)
+    public ApiResponse<String> inviteCode(@RequestParam Long meetingId) {
+        return ApiResponse.of(ApiResponseCode.SUCCESS, meetingQueryService.getInviteCode(meetingId));
     }
 }
