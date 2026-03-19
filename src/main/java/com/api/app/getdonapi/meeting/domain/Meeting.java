@@ -6,6 +6,7 @@ import com.api.app.getdonapi.meetingmember.domain.MeetingMember;
 import com.api.app.getdonapi.member.domain.User;
 import com.api.app.getdonapi.onetimepayment.domain.OneTimePayment;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -23,24 +24,32 @@ public class Meeting extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "title", nullable = false, length = 50)
+    @NotNull
     private String title;
 
-    @Column(name = "bank_name", nullable = false, length = 20)
+    @Column(name = "bank_name", nullable = false,length = 20)
+    @NotNull
     private String bankName;
 
     @Column(name = "bank_account", nullable = false)
+    @NotNull
     private Integer bankAccount;
 
     @Column(name = "amount", nullable = false)
-
+    @NotNull
     private Integer amount = 0;
 
+    @Column(name = "invite_code", length = 8, unique = true, nullable = false)
+    @NotNull
+    private String inviteCode;
+
     @Enumerated(EnumType.STRING)
-    @Column(name = "delete_yn", nullable = false, length = 1)
+    @Column(name = "delete_yn", length = 1, nullable = false)
+    @NotNull
     private DeleteYn deleteYn = DeleteYn.N;
 
     @OneToMany(mappedBy = "meeting")
@@ -56,7 +65,12 @@ public class Meeting extends BaseTimeEntity {
         this.bankName = bankName;
         this.bankAccount = bankAccount;
         this.amount = 0;
+        this.inviteCode = generateInviteCode();
         this.deleteYn = DeleteYn.N;
+    }
+
+    private static String generateInviteCode() {
+        return java.util.UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase();
     }
 
     public void delete() {

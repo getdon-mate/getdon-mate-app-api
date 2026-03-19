@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface MeetingQueryService {
     List<MyMeetingListResponse> getMyList(Long userId);
+
+    String getInviteCode(Long meetingId);
 }

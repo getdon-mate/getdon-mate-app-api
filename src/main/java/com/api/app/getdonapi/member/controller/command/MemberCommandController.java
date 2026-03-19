@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping(ApiPath.Member.ROOT)
 public class MemberCommandController {
-    public final MemberCommandService memberCommandService;
+    private final MemberCommandService memberCommandService;
 
     @PostMapping(ApiPath.Member.JOIN)
     @ResponseStatus(HttpStatus.CREATED)

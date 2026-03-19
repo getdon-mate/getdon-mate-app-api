@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
 
+import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
@@ -103,6 +104,37 @@ class MeetingQueryControllerTest extends RestDocsSupport {
                                         fieldWithPath("data[].bankName").type(JsonFieldType.STRING).description("은행명"),
                                         fieldWithPath("data[].amount").type(JsonFieldType.NUMBER).description("모임 통장 잔액"),
                                         fieldWithPath("data[].paidCount").type(JsonFieldType.NUMBER).description("납부 완료 횟수")
+                                )
+                                .build()
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("모임 초대코드 조회 성공")
+    void getInviteCode() throws Exception {
+        // given
+        when(meetingQueryService.getInviteCode(anyLong())).thenReturn("ABCD1234");
+
+        // when & then
+        mockMvc.perform(get(ApiPath.Meeting.ROOT + ApiPath.Meeting.INVITE_CODE)
+                        .param("meetingId", "1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.message").value("정상 처리됐습니다."))
+                .andExpect(jsonPath("$.data").value("ABCD1234"))
+                .andDo(MockMvcRestDocumentationWrapper.document("meeting-invite-code",
+                        resource(ResourceSnippetParameters.builder()
+                                .tag("Meeting")
+                                .summary("모임 초대코드 조회")
+                                .description("모임 ID로 초대코드를 조회합니다.")
+                                .queryParameters(parameterWithName("meetingId").description("모임 ID"))
+                                .responseSchema(Schema.schema("InviteCodeResponse"))
+                                .responseFields(
+                                        fieldWithPath("status").type(JsonFieldType.NUMBER).description("HTTP 상태 코드"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.STRING).description("초대코드 (8자리 대문자)")
                                 )
                                 .build()
                         )
