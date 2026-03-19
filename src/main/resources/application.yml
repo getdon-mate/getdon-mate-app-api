@@ -36,5 +36,21 @@ spring:
 jwt:
   secret-key: ${JWT_SECRET_KEY}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
 logging:
   config: classpath:logback/logback-config.xml
+
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
