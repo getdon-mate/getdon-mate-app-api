@@ -50,6 +50,9 @@ src/main/java/com/api/app/getdonapi/
 # 빌드 (테스트 포함)
 ./gradlew build
 
+# openapi3 최신화
+./gradlew openapi3
+
 # 애플리케이션 실행
 ./gradlew bootRun
 ```
@@ -88,6 +91,25 @@ open build/reports/tests/test/index.html
 # 생성 경로
 src/main/resources/static/docs/openapi3.yaml
 ```
+
+---
+
+## API 목록
+
+### Member (인증 불필요)
+
+| Method | Path | 설명 |
+|--------|------|------|
+| POST | `/api/member/join` | 회원가입 |
+| POST | `/api/member/login` | 로그인 |
+
+### Meeting (Bearer Token 필요)
+
+| Method | Path | 설명 |
+|--------|------|------|
+| POST | `/api/meeting/create` | 모임 통장 생성 |
+| GET | `/api/meeting/my-list` | 내 모임 목록 조회 |
+| GET | `/api/meeting/invite-code?meetingId={id}` | 모임 초대코드 조회 |
 
 ---
 

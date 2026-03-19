@@ -6,6 +6,7 @@ import com.api.app.getdonapi.meeting.domain.Meeting;
 import com.api.app.getdonapi.meetingmember.domain.MeetingMember;
 import com.api.app.getdonapi.member.domain.enums.LoginType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -22,17 +23,21 @@ public class User extends BaseTimeEntity {
     @Column(name = "user_id")
     private Long id;
 
+    @NotNull
     private String userName;
 
     @Column(name = "profile_url")
     private String profileUrl;
 
+    @NotNull
     private String email;
 
+    @NotNull
     private String password;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 6)
+    @NotNull
     private LoginType provider;
 
     @Column(name = "provider_id")
@@ -40,6 +45,7 @@ public class User extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "use_yn",length = 1)
+    @NotNull
     private UseYn useYn = UseYn.Y;
 
     @OneToMany(mappedBy = "user")
