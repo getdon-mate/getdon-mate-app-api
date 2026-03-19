@@ -72,7 +72,7 @@ clean.doLast {
 }
 
 openapi3 {
-    servers = [{ url = 'http://localhost:8080' }]
+    servers = [{ url = 'https://getdon-api.duckdns.org' }, { url = 'http://localhost:8080' }]
     title = 'getdon-api'
     version = '0.0.1-SNAPSHOT'
     outputFileNamePrefix = 'openapi3'
