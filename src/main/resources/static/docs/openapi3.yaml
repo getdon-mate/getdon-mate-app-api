@@ -3,8 +3,8 @@ info:
   title: getdon-api
   version: 0.0.1-SNAPSHOT
 servers:
+- url: https://getdon-api.duckdns.org
 - url: http://localhost:8080
-- url: http://129.154.205.27:8080
 tags: []
 paths:
   /api/meeting/create:
@@ -23,7 +23,8 @@ paths:
               $ref: "#/components/schemas/CreateMeetingRequest"
             examples:
               meeting-create:
-                value: "{\"title\":\"테스트 모임\",\"bankName\":\"카카오뱅크\",\"bankAccount\":1234567890}"
+                value: "{\"title\":\"테스트 모임\",\"bankName\":\"카카오뱅크\",\"bankAccount\"\
+                  :1234567890}"
       responses:
         "201":
           description: "201"
