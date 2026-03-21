@@ -1,9 +1,9 @@
 package com.api.app.getdonapi.meeting.repository;
 
-import com.api.app.getdonapi.meeting.service.internal.MyMeetingList;
+import com.api.app.getdonapi.meeting.controller.response.MyMeetingListResponse;
 
 import java.util.List;
 
 public interface MeetingRepositoryCustom {
-    List<MyMeetingList> findMyMeetingList(Long userId);
+    List<MyMeetingListResponse> findMyMeetingList(Long userId);
 }

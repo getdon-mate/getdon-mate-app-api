@@ -5,9 +5,8 @@ import com.api.app.getdonapi.global.exception.CustomException;
 import com.api.app.getdonapi.meeting.controller.request.CreateMeetingRequest;
 import com.api.app.getdonapi.meeting.domain.Meeting;
 import com.api.app.getdonapi.meeting.repository.MeetingRepository;
-import com.api.app.getdonapi.meetingmember.domain.MeetingMember;
 import com.api.app.getdonapi.meetingmember.enums.MeetingRole;
-import com.api.app.getdonapi.meetingmember.repository.MeetingMemberRepository;
+import com.api.app.getdonapi.meetingmember.service.command.MeetingMemberCommandService;
 import com.api.app.getdonapi.member.domain.User;
 import com.api.app.getdonapi.member.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,7 @@ public class MeetingCommandServiceImpl implements MeetingCommandService {
 
     private final UserRepository userRepository;
     private final MeetingRepository meetingRepository;
-    private final MeetingMemberRepository meetingMemberRepository;
+    private final MeetingMemberCommandService meetingMemberCommandService;
 
     @Override
     public void createMeeting(Long userId, CreateMeetingRequest request) {
@@ -37,12 +36,6 @@ public class MeetingCommandServiceImpl implements MeetingCommandService {
 
         meetingRepository.save(meeting);
 
-        MeetingMember meetingMember = MeetingMember.builder()
-                .user(user)
-                .meeting(meeting)
-                .role(MeetingRole.LEADER)
-                .build();
-
-        meetingMemberRepository.save(meetingMember);
+        meetingMemberCommandService.addMember(user, meeting, MeetingRole.LEADER);
     }
 }

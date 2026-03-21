@@ -19,5 +19,7 @@ public class ApiPath {
     public static final class MeetingMember {
         public static final String ROOT  = API + "/meeting-member";
         public static final String JOIN = "/join";
+        public static final String WITHDRAWAL = "/withdrawal";
+        public static final String MEMBER_LIST = "/list";
     }
 }

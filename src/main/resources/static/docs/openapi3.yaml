@@ -35,6 +35,65 @@ paths:
                 meeting-member-join:
                   value: "{\"message\":\"모임 통장에 초대되었습니다.\",\"data\":null,\"status\"\
                     :201}"
+  /api/meeting-member/list:
+    get:
+      tags:
+      - MeetingMember
+      summary: 모임 멤버 목록 조회
+      description: 모임 ID로 활성 멤버 목록을 조회합니다.
+      operationId: meeting-member-list
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: meetingId
+        in: query
+        description: 모임 ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MeetingMemberListResponse"
+              examples:
+                meeting-member-list:
+                  value: "{\"message\":\"정상 처리됐습니다.\",\"data\":[{\"meetingMemberId\"\
+                    :1,\"userId\":1,\"userName\":\"홍길동\",\"profileUrl\":\"https://example.com/profile.jpg\"\
+                    ,\"role\":\"LEADER\"},{\"meetingMemberId\":2,\"userId\":2,\"userName\"\
+                    :\"김영희\",\"profileUrl\":null,\"role\":\"MEMBER\"}],\"status\"\
+                    :200}"
+  /api/meeting-member/withdrawal:
+    delete:
+      tags:
+      - MeetingMember
+      summary: 모임 멤버 내보내기
+      description: LEADER가 특정 모임 멤버를 내보냅니다.
+      operationId: meeting-member-withdrawal
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: meetingMemberId
+        in: query
+        description: 내보낼 모임 멤버 ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+              examples:
+                meeting-member-withdrawal:
+                  value: "{\"message\":\"모임 멤버가 탈퇴 처리되었습니다.\",\"data\":null,\"status\"\
+                    :200}"
   /api/meeting/create:
     post:
       tags:
@@ -79,7 +138,8 @@ paths:
         description: 모임 ID
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       responses:
         "200":
           description: "200"
@@ -180,6 +240,45 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    MeetingMemberListResponse:
+      title: MeetingMemberListResponse
+      required:
+      - message
+      - status
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            required:
+            - meetingMemberId
+            - role
+            - userId
+            - userName
+            type: object
+            properties:
+              profileUrl:
+                type: string
+                description: 프로필 이미지 URL
+                nullable: true
+              role:
+                type: string
+                description: 모임 역할 (LEADER / MEMBER)
+              meetingMemberId:
+                type: number
+                description: 모임 멤버 ID
+              userName:
+                type: string
+                description: 유저 이름
+              userId:
+                type: number
+                description: 유저 ID
+        message:
+          type: string
+          description: 응답 메시지
+        status:
+          type: number
+          description: HTTP 상태 코드
     UserLoginResponse:
       title: UserLoginResponse
       required:

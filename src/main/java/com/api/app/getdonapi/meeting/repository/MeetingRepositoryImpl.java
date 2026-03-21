@@ -1,8 +1,8 @@
 package com.api.app.getdonapi.meeting.repository;
 
+import com.api.app.getdonapi.meeting.controller.response.MyMeetingListResponse;
 import com.api.app.getdonapi.meeting.domain.QMeeting;
 import com.api.app.getdonapi.meeting.domain.enums.DeleteYn;
-import com.api.app.getdonapi.meeting.service.internal.MyMeetingList;
 import com.api.app.getdonapi.meetingmember.domain.QMeetingMember;
 import com.api.app.getdonapi.paymenthistory.domain.QPaymentHistory;
 import com.api.app.getdonapi.paymenthistory.enums.PaymentStatus;
@@ -26,9 +26,9 @@ public class MeetingRepositoryImpl implements MeetingRepositoryCustom {
     private static final QPaymentHistory paymentHistory = QPaymentHistory.paymentHistory;
 
     @Override
-    public List<MyMeetingList> findMyMeetingList(Long userId) {
+    public List<MyMeetingListResponse> findMyMeetingList(Long userId) {
         return queryFactory
-                .select(Projections.constructor(MyMeetingList.class,
+                .select(Projections.constructor(MyMeetingListResponse.class,
                         meeting.id,
                         meeting.title,
                         meeting.bankName,

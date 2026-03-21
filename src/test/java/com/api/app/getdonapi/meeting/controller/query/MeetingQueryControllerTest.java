@@ -8,6 +8,7 @@ import com.api.app.getdonapi.meeting.service.query.MeetingQueryService;
 import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
+import com.epages.restdocs.apispec.SimpleType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -75,7 +76,7 @@ class MeetingQueryControllerTest extends RestDocsSupport {
                         .title("테스트 모임")
                         .bankName("카카오뱅크")
                         .amount(50000)
-                        .paidCount(3)
+                        .paidCount(3L)
                         .build()
         );
 
@@ -129,7 +130,7 @@ class MeetingQueryControllerTest extends RestDocsSupport {
                                 .tag("Meeting")
                                 .summary("모임 초대코드 조회")
                                 .description("모임 ID로 초대코드를 조회합니다.")
-                                .queryParameters(parameterWithName("meetingId").description("모임 ID"))
+                                .queryParameters(parameterWithName("meetingId").type(SimpleType.INTEGER).description("모임 ID"))
                                 .responseSchema(Schema.schema("InviteCodeResponse"))
                                 .responseFields(
                                         fieldWithPath("status").type(JsonFieldType.NUMBER).description("HTTP 상태 코드"),
