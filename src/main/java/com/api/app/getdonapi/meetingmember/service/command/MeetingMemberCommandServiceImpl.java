@@ -30,10 +30,15 @@ public class MeetingMemberCommandServiceImpl implements MeetingMemberCommandServ
         Meeting meeting = meetingRepository.findByInviteCode(request.getInviteCode())
                 .orElseThrow(() -> new CustomException(ErrorCode.MEETING_NOT_FOUND));
 
+        addMember(user, meeting, MeetingRole.MEMBER);
+    }
+
+    @Override
+    public void addMember(User user, Meeting meeting, MeetingRole role) {
         MeetingMember meetingMember = MeetingMember.builder()
                 .user(user)
                 .meeting(meeting)
-                .role(MeetingRole.MEMBER)
+                .role(role)
                 .build();
 
         meetingMemberRepository.save(meetingMember);
