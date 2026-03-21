@@ -6,6 +6,8 @@ public enum ErrorCode {
     DUPLICATE_EMAIL(409, "M001", "이미 사용 중인 이메일입니다."),
     MEMBER_NOT_FOUND(404, "M002", "존재하지 않는 회원입니다."),
     MEETING_NOT_FOUND(404, "MT001", "존재하지 않는 모임입니다."),
+    MEETING_MEMBER_NOT_FOUND(404, "MM001", "모임 멤버를 찾을 수 없습니다."),
+    NOT_LEADER(403, "MM002", "모임장만 멤버를 내보낼 수 있습니다."),
     INVALID_PASSWORD(401, "M003", "비밀번호가 올바르지 않습니다."),
     INTERNAL_SERVER_ERROR(500, "E999", "서버 내부 오류가 발생했습니다."),
     ;

@@ -5,9 +5,8 @@ import com.api.app.getdonapi.global.exception.CustomException;
 import com.api.app.getdonapi.meeting.controller.request.CreateMeetingRequest;
 import com.api.app.getdonapi.meeting.domain.Meeting;
 import com.api.app.getdonapi.meeting.repository.MeetingRepository;
-import com.api.app.getdonapi.meetingmember.domain.MeetingMember;
 import com.api.app.getdonapi.meetingmember.enums.MeetingRole;
-import com.api.app.getdonapi.meetingmember.repository.MeetingMemberRepository;
+import com.api.app.getdonapi.meetingmember.service.command.MeetingMemberCommandService;
 import com.api.app.getdonapi.member.domain.User;
 import com.api.app.getdonapi.member.domain.enums.LoginType;
 import com.api.app.getdonapi.member.repository.UserRepository;
@@ -20,6 +19,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -29,9 +29,9 @@ class MeetingCommandServiceImplTest {
 
     private final UserRepository userRepository = mock(UserRepository.class);
     private final MeetingRepository meetingRepository = mock(MeetingRepository.class);
-    private final MeetingMemberRepository meetingMemberRepository = mock(MeetingMemberRepository.class);
+    private final MeetingMemberCommandService meetingMemberCommandService = mock(MeetingMemberCommandService.class);
     private final MeetingCommandServiceImpl meetingCommandService =
-            new MeetingCommandServiceImpl(userRepository, meetingRepository, meetingMemberRepository);
+            new MeetingCommandServiceImpl(userRepository, meetingRepository, meetingMemberCommandService);
 
     @Test
     @DisplayName("모임 생성 성공 - Meeting 저장 및 LEADER로 MeetingMember 저장")
@@ -63,11 +63,7 @@ class MeetingCommandServiceImplTest {
         assertThat(savedMeeting.getBankName()).isEqualTo("카카오뱅크");
         assertThat(savedMeeting.getBankAccount()).isEqualTo(12345678);
 
-        ArgumentCaptor<MeetingMember> memberCaptor = ArgumentCaptor.forClass(MeetingMember.class);
-        verify(meetingMemberRepository).save(memberCaptor.capture());
-        MeetingMember savedMember = memberCaptor.getValue();
-        assertThat(savedMember.getRole()).isEqualTo(MeetingRole.LEADER);
-        assertThat(savedMember.getWithdrawalYn()).isEqualTo("N");
+        verify(meetingMemberCommandService).addMember(any(User.class), any(Meeting.class), eq(MeetingRole.LEADER));
     }
 
     @Test
@@ -85,6 +81,6 @@ class MeetingCommandServiceImplTest {
                 .satisfies(e -> assertThat(((CustomException) e).getErrorCode()).isEqualTo(ErrorCode.MEMBER_NOT_FOUND));
 
         verify(meetingRepository, never()).save(any());
-        verify(meetingMemberRepository, never()).save(any());
+        verify(meetingMemberCommandService, never()).addMember(any(), any(), any());
     }
 }

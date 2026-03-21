@@ -24,4 +24,10 @@ public class MeetingMemberCommandController {
         meetingMemberCommandService.joinMeeting(request, user.userId());
         return ApiResponse.of(ApiResponseCode.JOIN_MEETING_MEMBER_CREATED);
     }
+
+    @DeleteMapping(ApiPath.MeetingMember.WITHDRAWAL)
+    public ApiResponse<Void> withdrawalMember(@RequestParam @Valid Long meetingMemberId, @AuthenticationPrincipal UserPrincipal user) {
+        meetingMemberCommandService.withdrawalMember(meetingMemberId, user.userId());
+        return ApiResponse.of(ApiResponseCode.MEETING_MEMBER_WITHDRAWAL);
+    }
 }
