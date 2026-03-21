@@ -3,9 +3,32 @@ spring:
     name: getdon-api
 
   profiles:
-    active: dev
+    active: local
 
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+---
+spring:
   config:
+    activate:
+      on-profile: local
     import: optional:file:.env[.properties]
 
   datasource:
@@ -16,6 +39,7 @@ spring:
     hikari:
       maximum-pool-size: 2
       connection-timeout: 3000
+
   flyway:
     enabled: true
     baseline-on-migrate: true
@@ -33,24 +57,47 @@ spring:
         default_batch_fetch_size: 100
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
-jwt:
-  secret-key: ${JWT_SECRET_KEY}
+logging:
+  config: classpath:logback/logback-config.xml
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health
-  endpoint:
-    health:
-      show-details: never
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 2
+      connection-timeout: 3000
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    locations: classpath:db/migration
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: false
+        default_batch_fetch_size: 100
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        session.events.log.LOG_QUERIES_SLOWER_THAN_MS: 3000
 
 logging:
   config: classpath:logback/logback-config.xml
-
-server:
-  servlet:
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
+  level:
+    org.hibernate.SQL: warn
+    org.hibernate.orm.jdbc.bind: off
