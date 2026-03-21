@@ -66,7 +66,7 @@ class MeetingQueryServiceImplTest {
         MyMeetingListResponse response = result.get(0);
         assertThat(response.getTitle()).isEqualTo("테스트 모임");
         assertThat(response.getBankName()).isEqualTo("카카오뱅크");
-        assertThat(response.getPaidCount()).isEqualTo(2);
+        assertThat(response.getPaidCount()).isEqualTo(2L);
     }
 
     @Test

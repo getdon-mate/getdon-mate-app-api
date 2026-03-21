@@ -9,4 +9,5 @@ import jakarta.validation.Valid;
 public interface MeetingMemberCommandService {
     void joinMeeting(@Valid JoinMeetingRequest request, Long userId);
     void addMember(User user, Meeting meeting, MeetingRole role);
+    void withdrawalMember(Long meetingMemberId, Long requesterId);
 }

@@ -43,4 +43,19 @@ public class MeetingMemberCommandServiceImpl implements MeetingMemberCommandServ
 
         meetingMemberRepository.save(meetingMember);
     }
+
+    @Override
+    public void withdrawalMember(Long meetingMemberId, Long requesterId) {
+        MeetingMember target = meetingMemberRepository.findById(meetingMemberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEETING_MEMBER_NOT_FOUND));
+
+        MeetingMember requester = meetingMemberRepository.findByUserIdAndMeetingId(requesterId, target.getMeeting().getId())
+                .orElseThrow(() -> new CustomException(ErrorCode.MEETING_MEMBER_NOT_FOUND));
+
+        if (requester.getRole() != MeetingRole.LEADER) {
+            throw new CustomException(ErrorCode.NOT_LEADER);
+        }
+
+        target.withdraw();
+    }
 }

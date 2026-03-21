@@ -17,6 +17,7 @@ public enum ApiResponseCode {
     MEETING_CREATED(HttpStatus.CREATED, "모임 통장 개설 완료되었습니다."),
 
     JOIN_MEETING_MEMBER_CREATED(HttpStatus.CREATED, "모임 통장에 초대되었습니다."),
+    MEETING_MEMBER_WITHDRAWAL(HttpStatus.OK, "모임 멤버가 탈퇴 처리되었습니다."),
     ;
 
     private final HttpStatus httpStatus;

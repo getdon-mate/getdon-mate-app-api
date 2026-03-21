@@ -112,4 +112,101 @@ class MeetingMemberCommandServiceImplTest {
 
         verify(meetingMemberRepository, never()).save(any());
     }
+
+    @Test
+    @DisplayName("모임 멤버 내보내기 성공 - LEADER가 요청 시 withdraw() 호출")
+    void withdrawalMember_success() {
+        // given
+        Long meetingMemberId = 10L;
+        Long requesterId = 1L;
+        Long meetingId = 5L;
+
+        Meeting meeting = mock(Meeting.class);
+        when(meeting.getId()).thenReturn(meetingId);
+
+        MeetingMember target = mock(MeetingMember.class);
+        when(target.getMeeting()).thenReturn(meeting);
+
+        MeetingMember requester = mock(MeetingMember.class);
+        when(requester.getRole()).thenReturn(MeetingRole.LEADER);
+
+        when(meetingMemberRepository.findById(meetingMemberId)).thenReturn(Optional.of(target));
+        when(meetingMemberRepository.findByUserIdAndMeetingId(requesterId, meetingId)).thenReturn(Optional.of(requester));
+
+        // when
+        meetingMemberCommandService.withdrawalMember(meetingMemberId, requesterId);
+
+        // then
+        verify(target).withdraw();
+    }
+
+    @Test
+    @DisplayName("모임 멤버 내보내기 실패 - 대상 멤버가 존재하지 않음")
+    void withdrawalMember_targetNotFound() {
+        // given
+        Long meetingMemberId = 999L;
+        Long requesterId = 1L;
+
+        when(meetingMemberRepository.findById(meetingMemberId)).thenReturn(Optional.empty());
+
+        // when & then
+        assertThatThrownBy(() -> meetingMemberCommandService.withdrawalMember(meetingMemberId, requesterId))
+                .isInstanceOf(CustomException.class)
+                .satisfies(e -> assertThat(((CustomException) e).getErrorCode()).isEqualTo(ErrorCode.MEETING_MEMBER_NOT_FOUND));
+
+        verify(meetingMemberRepository, never()).findByUserIdAndMeetingId(any(), any());
+    }
+
+    @Test
+    @DisplayName("모임 멤버 내보내기 실패 - 요청자가 해당 모임 멤버가 아님")
+    void withdrawalMember_requesterNotFound() {
+        // given
+        Long meetingMemberId = 10L;
+        Long requesterId = 999L;
+        Long meetingId = 5L;
+
+        Meeting meeting = mock(Meeting.class);
+        when(meeting.getId()).thenReturn(meetingId);
+
+        MeetingMember target = mock(MeetingMember.class);
+        when(target.getMeeting()).thenReturn(meeting);
+
+        when(meetingMemberRepository.findById(meetingMemberId)).thenReturn(Optional.of(target));
+        when(meetingMemberRepository.findByUserIdAndMeetingId(requesterId, meetingId)).thenReturn(Optional.empty());
+
+        // when & then
+        assertThatThrownBy(() -> meetingMemberCommandService.withdrawalMember(meetingMemberId, requesterId))
+                .isInstanceOf(CustomException.class)
+                .satisfies(e -> assertThat(((CustomException) e).getErrorCode()).isEqualTo(ErrorCode.MEETING_MEMBER_NOT_FOUND));
+
+        verify(target, never()).withdraw();
+    }
+
+    @Test
+    @DisplayName("모임 멤버 내보내기 실패 - 요청자가 LEADER가 아님")
+    void withdrawalMember_notLeader() {
+        // given
+        Long meetingMemberId = 10L;
+        Long requesterId = 2L;
+        Long meetingId = 5L;
+
+        Meeting meeting = mock(Meeting.class);
+        when(meeting.getId()).thenReturn(meetingId);
+
+        MeetingMember target = mock(MeetingMember.class);
+        when(target.getMeeting()).thenReturn(meeting);
+
+        MeetingMember requester = mock(MeetingMember.class);
+        when(requester.getRole()).thenReturn(MeetingRole.MEMBER);
+
+        when(meetingMemberRepository.findById(meetingMemberId)).thenReturn(Optional.of(target));
+        when(meetingMemberRepository.findByUserIdAndMeetingId(requesterId, meetingId)).thenReturn(Optional.of(requester));
+
+        // when & then
+        assertThatThrownBy(() -> meetingMemberCommandService.withdrawalMember(meetingMemberId, requesterId))
+                .isInstanceOf(CustomException.class)
+                .satisfies(e -> assertThat(((CustomException) e).getErrorCode()).isEqualTo(ErrorCode.NOT_LEADER));
+
+        verify(target, never()).withdraw();
+    }
 }
